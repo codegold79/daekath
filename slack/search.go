@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
 )
@@ -41,7 +42,7 @@ func Goodminder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("doSearch: %v", err)
 	}
-	w.Header().Set("Content-Type:", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	if err = json.NewEncoder(w).Encode(searchResponse); err != nil {
 		log.Fatalf("json.Marshal: %v", err)
 	}
@@ -59,14 +60,27 @@ func verifyWebHook(form url.Values) error {
 }
 
 func doSearch() (*Message, error) {
+	quotes := [10]string{
+		"You are awesome for doing a job well done!",
+		"Everyone sees you as an intelligent, kind, hard-working, ethical person.",
+		"It’s only after you’ve stepped outside your comfort zone that you begin to change, grow, and transform. ― Roy T. Bennett ",
+		"Keep your face to the sunshine and you cannot see a shadow. – Helen Keller",
+		"Stay positive in every situation and everything you do, never stop trying, have faith don’t stop due to failure. – Anurag Prakash Ray",
+		"Be the reason someone smiles. Be the reason someone feels loved and believes in the goodness in people. – Roy T. Bennett",
+		"Optimism is a happiness magnet. If you stay positive, good things and good people will be drawn to you. – Mary Lou Retton",
+		"Yesterday is not ours to recover, but tomorrow is ours to win or lose. – Lyndon B. Johnson",
+		"Dwell on the beauty of life. Watch the stars, and see yourself running with them. – Marcus Aurelius",
+		"I always like to look on the optimistic side of life, but I am realistic enough to know that life is a complex matter. – Walt Disney",
+	}
+
+	quote := quotes[rand.Intn(10)]
+
 	attach := attachment{
-		Color:    "#3367d6",
-		Text:     "A test attachment",
-		Title:    "A test title",
-		ImageURL: "A test ImageURL",
+		Color: "#02e58a",
+		Text:  quote,
 	}
 	message := &Message{
-		Text:        fmt.Sprint("This is a test message"),
+		Text:        "Here is your goodminder: ",
 		Attachments: []attachment{attach},
 	}
 	return message, nil
